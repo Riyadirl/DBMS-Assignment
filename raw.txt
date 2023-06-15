@@ -1,0 +1,560 @@
+header.php
+
+<?php
+session_start();
+
+if ($_SERVER['QUERY_STRING'] == 'noname') {
+
+    //Null Coalescing
+    unset($_SESSION['name']);
+}
+
+$name = $_SESSION['name'] ?? 'Guest';
+
+//get cookie
+$gender = $_COOKIE['gender'] ?? 'Unknown';
+
+
+?>
+
+
+<head>
+    <title>Pizza Guy</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style type="text/css">
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .brand {
+        background-color: #cbb09c !important;
+    }
+
+    .brand-text {
+        color: #cbb09c !important;
+    }
+
+    h4 {
+        text-align: center;
+        color: #333;
+    }
+
+    form {
+        /* CSS styles for the form */
+        background-color: #f5f7fa;
+        padding: 20px;
+        border: 1px solid #e1e8ed;
+        border-radius: 4px;
+        width: 300px;
+        margin: 0 auto;
+    }
+
+    form label {
+        /* CSS styles for form labels */
+        font-size: 15px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    form input[type="text"],
+    form input[type="email"] {
+        /* CSS styles for text and email inputs */
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+    form input[type="submit"] {
+        /* CSS styles for submit button */
+        text-align: center;
+        background-color: #ff4081;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        width: 150px;
+        /* Adjust the width as needed */
+    }
+
+    form input[type="submit"]:hover {
+        background-color: #ff6699;
+    }
+
+    .deletebtn {
+        background-color: #ff0000;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+
+
+    .deletebtn:hover {
+        background-color: #ff3333;
+    }
+
+    .error-heading {
+        color: red;
+
+    }
+
+    .pizza {
+
+        margin: 40px auto -30px;
+        display: block;
+        position: relative;
+        top: -20px;
+    }
+    </style>
+</head>
+
+<body class="grey lighten-4">
+    <nav class="white z-depth-0">
+        <div class="div.container">
+            <a herf="#" class="brand-logo brand-text">Pizza Guy</a>
+            <ul id="nav-mobile" class="right hide-on-small-and-down">
+                <li class="grey-text">Hello <?php echo htmlspecialchars($name) ?></li>
+                <li class="grey-text"> (<?php echo htmlspecialchars($gender) ?>)</li>
+                <li><a href="#" class="btn brand z-depth-0">add a pizza</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+footer.php
+<footer class="section">
+    <div class="center grey-text">Copyright 2023 @Crlwat</div>
+</footer>
+
+</body>
+
+
+
+
+index.php
+<?php
+
+
+//connect db from config folder
+
+include('./db_connect.php');
+
+
+
+//write query for all pizzas
+$sql = 'SELECT title, ingredients, id FROM pizzas';
+
+//make query and get result
+$result = mysqli_query($conn, $sql);
+
+// fetch the resulting rows as an array
+$pizzas = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+//print_r($pizzas);
+
+
+
+
+
+// close connection
+mysqli_close($conn);
+
+//explode(',', $pizzas[0]['ingredients']);
+
+
+
+
+
+
+
+
+
+?>
+<!DOCTYPE html>
+<html>
+
+<?php include('./header.php'); ?>
+
+<h4 class="center grey-text">Pizzas!</h4>
+
+<div class="container">
+    <div class="row">
+
+        <?php foreach ($pizzas as $pizza) : ?>
+
+        <div class="col s6 md3">
+            <div class="card z-depth-0">
+                <img src="./pizza.png" class="pizza">
+                <div class="card-content center">
+
+                    <h6><?php echo htmlspecialchars($pizza['title']); ?></h6>
+                    <ul>
+                        <?php foreach (explode(',', $pizza['ingredients']) as $ing) : ?>
+                        <li><?php echo htmlspecialchars($ing); ?></li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+                <div class="card-action right-align">
+                    <a href="details.php?id=<?php echo $pizza['id'] ?>" class="brand-text">more info</a>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+
+        <!-- <?php if (count($pizzas) >= 3) : ?>
+                <p>there are 2 or more pizzas</p>
+            <?php else : ?>
+                <p>there are less than 2 pizzas</p>
+            <?php endif; ?> -->
+    </div>
+</div>
+
+
+<?php include('./footer.php'); ?>
+
+</html>
+
+
+db_connect.php
+<?php
+//connect to database
+$conn = mysqli_connect('localhost', 'ninja123', 'test123', 'ninja_pizza');
+
+//check connection
+if (!$conn) {
+    echo 'connection error' . mysqli_connect_error();
+}
+
+
+add.php
+<?php
+
+
+//connect db from config folder
+
+include('./db_connect.php');
+
+
+
+
+$title = $email = $ingredients = '';
+$errors = array('email' => '', 'title' => '', 'ingredients' => '');
+
+
+
+if (isset($_POST['submit'])) {
+
+
+    // check email
+    if (empty($_POST['email'])) {
+        echo  'An email is required <br />';
+    } else {
+        $email = $_POST['email'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'e-mail must be a valid email address';
+        }
+    }
+
+    // check title
+    if (empty($_POST['title'])) {
+        echo 'A title is required <br />';
+    } else {
+        $title = $_POST['title'];
+        if (!preg_match('/^[a-zA-Z\s]+$/', $title)) {
+            $errors['title'] = 'Title must be letters and spaces only';
+        }
+    }
+
+    // check email
+    if (empty($_POST['ingredients'])) {
+        echo  'An least one ingredient is required <br />';
+    } else {
+        $ingredients = $_POST['ingredients'];
+        if (!preg_match('/^([a-zA-Z\s]+)(,\s*[a-zA-Z\s]*)*$/', $ingredients)) {
+            $errors['ingredients'] = 'Ingredients must be a comma separated list';
+        } //end of post check
+    }
+    //Checking for Errors & Redirecting
+    if (array_filter($errors)) {
+        // echo 'errors in the form';
+    } else {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $title = mysqli_real_escape_string($conn, $_POST['title']);
+        $ingredients = mysqli_real_escape_string($conn, $_POST['ingredients']);
+
+        // create sql
+        $sql = "INSERT INTO pizzas(title,email,ingredients) VALUES('$title','$email','$ingredients')";
+
+        // save to db and check
+        if (mysqli_query($conn, $sql)) {
+            // success
+            header('Location:index.php');
+        } else {
+            // error
+            echo 'query error: ' . mysqli_error($conn);
+        }
+    }
+
+    //end of post chec
+}
+
+
+
+
+?>
+<!DOCTYPE html>
+<html>
+
+<?php include('./header.php'); ?>
+
+<section class="container grey-text">
+
+    <section class="container grey-text">
+        <h4 class="center">Add a Pizza</h4>
+
+        <form action="add.php" method="POST" class="white">
+
+            <label for="email">Your Email:</label>
+            <input type="text" name="email" value="<?php echo htmlspecialchars($email) ?>">
+            <div class="red-text"><?php echo $errors['email']; ?></div>
+
+            <label for="title">Pizza Title:</label>
+            <input type="text" name="title" value="<?php echo htmlspecialchars($title) ?>">
+            <div class="red-text"><?php echo $errors['title']; ?></div>
+
+            <label for="ingredients">Ingredients (comma separated):</label>
+            <input type="text" name="ingredients" value="<?php echo htmlspecialchars($ingredients) ?>">
+            <div class="red-text"><?php echo $errors['ingredients']; ?></div>
+
+            <input type="submit" value="submit" name="submit">
+
+        </form>
+    </section>
+
+
+    <?php include('./footer.php'); ?>
+
+
+
+</html>
+
+
+details.php
+<?php
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+include('./db_connect.php');
+
+if (isset($_POST['Delete'])) {
+    $id_to_delete = mysqli_real_escape_string($conn, $_POST['id_to_delete']);
+
+    $sql = "DELETE FROM pizzas WHERE id = $id_to_delete";
+
+    // check delete
+    if (mysqli_query($conn, $sql)) {
+        header('Location: index.php');
+        exit();
+    } else {
+        echo 'Query error: ' . mysqli_error($conn);
+    }
+}
+
+// check GET request id parameter
+if (isset($_GET['id'])) {
+    $id = mysqli_real_escape_string($conn, $_GET['id']);
+
+    // make sql
+    $sql = "SELECT * FROM pizzas WHERE id = $id";
+
+    // get the query result
+    $result = mysqli_query($conn, $sql);
+
+    // fetch result in array format
+    $pizza = mysqli_fetch_assoc($result);
+
+    mysqli_free_result($result);
+    mysqli_close($conn);
+}
+?>
+
+<!DOCTYPE html>
+<html>
+
+<?php include('./header.php'); ?>
+
+<div class="container center">
+    <?php if ($pizza) : ?>
+
+    <h4><?php echo htmlspecialchars($pizza['title']); ?></h4>
+    <p>Created by: <?php echo htmlspecialchars($pizza['email']); ?></p>
+    <p><?php echo date('F j, Y', strtotime($pizza['created_at'])); ?></p>
+    <h5>Ingredients:</h5>
+    <p><?php echo htmlspecialchars($pizza['ingredients']); ?></p>
+
+    <!-- Delete form -->
+    <form action="details.php" method="POST">
+        <input type="hidden" name="id_to_delete" value="<?php echo $pizza['id']; ?>">
+        <input type="submit" name="Delete" value="Delete" class="deletebtn">
+    </form>
+
+    <?php else : ?>
+
+    <h5 class="error-heading">No such pizza exists!</h5>
+
+    <?php endif; ?>
+</div>
+
+<?php include('./footer.php'); ?>
+
+</html>
+
+
+sandbox.php
+<?php
+
+if (isset($_POST['submit'])) {
+    session_start();
+
+    //Cookies for gender
+    setcookie('gender', $_POST['gender'], time() + 86400);
+
+    $_SESSION['name'] = $_POST['name'];
+
+    header('Location: index.php');
+}
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+    /* Apply CSS to center the form and add colors */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    form {
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="submit"] {
+        padding: 10px;
+        border: none;
+        background-color: #f2f2f2;
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        cursor: pointer;
+    }
+    </style>
+    <title>namebox</title>
+</head>
+
+<body>
+
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+        <input type="" name="name">
+        <select name="gender">
+            <option value="male">male</option>
+            <option value="female">female</option>
+        </select>
+        <input type="submit" name="submit" value="submit">
+    </form>
+
+</body>
+
+</html>
+
+sandbox.php
+
+<?php
+
+if (isset($_POST['submit'])) {
+    session_start();
+
+    //Cookies for gender
+    setcookie('gender', $_POST['gender'], time() + 86400);
+
+    $_SESSION['name'] = $_POST['name'];
+
+    header('Location: index.php');
+}
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+    /* Apply CSS to center the form and add colors */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    form {
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="submit"] {
+        padding: 10px;
+        border: none;
+        background-color: #f2f2f2;
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        cursor: pointer;
+    }
+    </style>
+    <title>namebox</title>
+</head>
+
+<body>
+
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+        <input type="" name="name">
+        <select name="gender">
+            <option value="male">male</option>
+            <option value="female">female</option>
+        </select>
+        <input type="submit" name="submit" value="submit">
+    </form>
+
+</body>
+
+</html>
+
