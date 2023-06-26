@@ -114,7 +114,7 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
             <ul id="nav-mobile" class="right hide-on-small-and-down">
                 <li class="grey-text">Hello <?php echo htmlspecialchars($name) ?></li>
                 <li class="grey-text"> (<?php echo htmlspecialchars($gender) ?>)</li>
-                <li><a href="#" class="btn brand z-depth-0">Add a Pizza</a></li>
+                <li><a href="add.php" class="btn brand z-depth-0">Add a Pizza</a></li>
                 <!-- Modified: Fixed "add a pizza" button text and added link -->
             </ul>
         </div>
