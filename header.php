@@ -15,7 +15,7 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
 
 <head>
     <title>Pizza Guy</title>
-    <!-- Compiled and minified CSS -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style type="text/css">
     body {
@@ -24,7 +24,7 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
 
     .brand {
         background-color: orange !important;
-        /* Modified: Changed background color to orange */
+
     }
 
     .brand-text {
@@ -37,7 +37,6 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
     }
 
     form {
-        /* CSS styles for the form */
         background-color: #f5f7fa;
         padding: 20px;
         border: 1px solid #e1e8ed;
@@ -47,7 +46,6 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
     }
 
     form label {
-        /* CSS styles for form labels */
         font-size: 15px;
         font-weight: bold;
         color: #333;
@@ -55,7 +53,6 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
 
     form input[type="text"],
     form input[type="email"] {
-        /* CSS styles for text and email inputs */
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -65,7 +62,6 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
     }
 
     form input[type="submit"] {
-        /* CSS styles for submit button */
         text-align: center;
         background-color: #ff4081;
         color: white;
@@ -76,7 +72,6 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
         display: block;
         margin: 0 auto;
         width: 150px;
-        /* Adjust the width as needed */
     }
 
     form input[type="submit"]:hover {
@@ -115,7 +110,7 @@ $gender = $_COOKIE['gender'] ?? 'Unknown';
                 <li class="grey-text">Hello <?php echo htmlspecialchars($name) ?></li>
                 <li class="grey-text"> (<?php echo htmlspecialchars($gender) ?>)</li>
                 <li><a href="add.php" class="btn brand z-depth-0">Add a Pizza</a></li>
-                <!-- Modified: Fixed "add a pizza" button text and added link -->
+
             </ul>
         </div>
     </nav>

@@ -20,33 +20,32 @@ if (isset($_POST['submit'])) {
 
 <head>
     <style>
-    /* Apply CSS to center the form and add colors */
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    form {
-        text-align: center;
-    }
+        form {
+            text-align: center;
+        }
 
-    input[type="text"],
-    input[type="submit"] {
-        padding: 10px;
-        border: none;
-        background-color: #f2f2f2;
-        color: #333;
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
+        input[type="text"],
+        input[type="submit"] {
+            padding: 10px;
+            border: none;
+            background-color: #f2f2f2;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
 
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: #fff;
-        cursor: pointer;
-    }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
     </style>
     <title>namebox</title>
 </head>

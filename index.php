@@ -1,12 +1,5 @@
 <?php
 
-//connect to database
-//$conn = mysqli_connect('localhost', 'ninja123', 'test123', 'ninja_pizza');
-
-//check connection
-//if (!$conn) {
-//echo 'connection error' . mysqli_connect_error();
-//}
 
 //connect db from config folder
 
@@ -33,14 +26,6 @@ $pizzas = mysqli_fetch_all($result, MYSQLI_ASSOC);
 // close connection
 mysqli_close($conn);
 
-//explode(',', $pizzas[0]['ingredients']);
-
-
-
-
-
-
-
 
 
 ?>
@@ -56,23 +41,23 @@ mysqli_close($conn);
 
         <?php foreach ($pizzas as $pizza) : ?>
 
-        <div class="col s6 md3">
-            <div class="card z-depth-0">
-                <img src="./pizza.png" class="pizza">
-                <div class="card-content center">
+            <div class="col s6 md3">
+                <div class="card z-depth-0">
+                    <img src="./pizza.png" class="pizza">
+                    <div class="card-content center">
 
-                    <h6><?php echo htmlspecialchars($pizza['title']); ?></h6>
-                    <ul>
-                        <?php foreach (explode(',', $pizza['ingredients']) as $ing) : ?>
-                        <li><?php echo htmlspecialchars($ing); ?></li>
-                        <?php endforeach ?>
-                    </ul>
-                </div>
-                <div class="card-action right-align">
-                    <a href="details.php?id=<?php echo $pizza['id'] ?>" class="brand-text">more info</a>
+                        <h6><?php echo htmlspecialchars($pizza['title']); ?></h6>
+                        <ul>
+                            <?php foreach (explode(',', $pizza['ingredients']) as $ing) : ?>
+                                <li><?php echo htmlspecialchars($ing); ?></li>
+                            <?php endforeach ?>
+                        </ul>
+                    </div>
+                    <div class="card-action right-align">
+                        <a href="details.php?id=<?php echo $pizza['id'] ?>" class="brand-text">more info</a>
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
 
         <!-- <?php if (count($pizzas) >= 3) : ?>

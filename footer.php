@@ -1,5 +1,5 @@
 <footer class="section">
-    <div class="center grey-text">Copyright 2023 @Crlwat</div>
+    <div class="center grey-text">Copyright 2023 @Mahbub</div>
 </footer>
 
 </body>
