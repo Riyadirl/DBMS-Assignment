@@ -5,7 +5,7 @@ $title = $email = $ingredients = '';
 $errors = array('email' => '', 'title' => '', 'ingredients' => '');
 
 if (isset($_POST['submit'])) {
-    // check email
+    //email validation
     if (empty($_POST['email'])) {
         echo 'An email is required <br />';
     } else {
@@ -15,7 +15,7 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    // check title
+    //title validation
     if (empty($_POST['title'])) {
         echo 'A title is required <br />';
     } else {
@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    // check ingredients
+    //ingredients validation
     if (empty($_POST['ingredients'])) {
         echo 'At least one ingredient is required <br />';
     } else {
@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    // Checking for Errors & Redirecting
+    // Errors & Redirecting
     if (array_filter($errors)) {
         // echo 'errors in the form';
     } else {
